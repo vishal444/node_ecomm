@@ -10,7 +10,7 @@ const formidable = require("formidable");
 const db_config = {
   host: "localhost",
   user: "root",
-  password: "visroot@4",
+  password: "vroot@4",
   database: "ecomm",
   port: 3306,
 };
