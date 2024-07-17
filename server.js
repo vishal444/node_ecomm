@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const mysql = require("mysql2");
 const formidable = require("formidable");
+const multer = require('multer');
 
 // Define the connection pool
 const db_config = {
@@ -26,6 +27,25 @@ const connection_pool = mysql.createPool(db_config).promise();
 
 app.get("/healthCheck", (req, res) => {
   res.send("health check passed");
+});
+
+// Set up multer for file upload
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '/home/ubuntu/resources'); // Set the destination folder
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname); // Use the original name of the file
+  },
+});
+
+const upload = multer({ storage: storage });
+
+app.post('/upload', upload.single('photo'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+  res.send({ message: 'File uploaded successfully', file: req.file });
 });
 
 // Endpoint to add items to the cart
